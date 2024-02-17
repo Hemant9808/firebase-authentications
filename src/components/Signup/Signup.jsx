@@ -35,7 +35,7 @@ export default function Signup() {
         await updateProfile(user, {
           displayName: values.name,
         });
-        console({ user });
+        
         navigate("/");
       })
       .catch((err) => {

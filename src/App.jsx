@@ -9,28 +9,36 @@ import { useState,useEffect } from "react";
 import { auth } from "./firebase";
 
 function App() {
+  const [loggedin,setloggedin] = useState(false);
   const [userName, setUserName] = useState("");
-
+  const [email,setemail] =useState("");
+  const [url,seturl] =useState("");
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
         setUserName(user.displayName);
+        setloggedin(true);
+        setemail(user.email);
+        seturl(user.photoURL)
       } else setUserName("");
     });
-  }, [userName]);
+  }, [userName,email,url]);
+
+
+ // const handleloggedin =(newloggedin)=>{
+ //  setloggedin(newloggedin);
+  //  console.log("loggedin=", loggedin);
+ //}
 
    return (
     <div className="App">
      
      <BrowserRouter>
       <Routes>
-        <Route index element={<Home name ={userName}/>} />
+        <Route index element={<Home loggedin={loggedin} name ={userName} email={email} url={url} />} />
         <Route path='/check' element={<Check/>} />
         <Route path='/signup' element={<Signup/>} />
-        <Route path='/login' element={<Login/>} />
-       
-
-
+        <Route path='/login' element={<Login loggedin={loggedin} />} />
       </Routes>
 
       </BrowserRouter>

@@ -1,0 +1,125 @@
+import {React,useState} from "react";
+import Input from "./Input";
+import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../firebase";
+import {useNavigate} from "react-router-dom";
+export default function Login() {
+    const [values, setvalue] = useState({ email: "", pass: "" });
+    const [errorMsg, setErrorMsg] = useState("");
+    const [isdisabled,setdisabled] = useState(false);
+    const navigate = useNavigate();
+    const submit=()=>{
+      signInWithEmailAndPassword(auth, values.email, values.pass)
+      .then(async (res) => {
+        setdisabled(true);
+        
+        navigate("/");
+      })
+      .catch((err) => {
+       
+        setErrorMsg(err.message);
+      });
+
+
+
+
+
+
+
+      
+    
+
+
+    import React from 'react'
+import { useState } from 'react';
+import Input from '../Input';
+import {  createUserWithEmailAndPassword,updateProfile } from "firebase/auth";
+import { auth } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+export default function Signup() {
+
+     
+    const [values, setvalue] = useState({name:"", email: "", pass: "" });
+    const [errorMsg, setErrorMsg] = useState("");
+    const [isdisabled,setdisabled] = useState(false);
+    const navigate = useNavigate();
+    const btndisabled = ()=>{
+         setdisabled(true);
+    }
+    const handleSubmission =()=>{
+        console.log(values);
+        
+        if(!values.name || !values.email || !values.pass ){
+            setErrorMsg("fill all inputs");
+            return;
+        }
+        setErrorMsg("");
+        createUserWithEmailAndPassword(auth, values.email, values.pass)
+        .then(async (res)=>{
+            console.log('method called');
+            console.log(res);
+            btndisabled();
+            const user = res.user;
+            await updateProfile(user, {
+              displayName: values.name,
+            });
+            navigate("/");
+        })
+        .catch((err) => {
+            
+            setErrorMsg(err.message);
+          });
+
+     }
+
+  return (
+    <div>
+        <Input 
+      label="Name" 
+      placeholder="Enter name"
+      onChange={(e)=>setvalue((prev) => ({...prev ,name: e.target.value}))}
+       />
+      <Input 
+      label="email" 
+      placeholder="Enter email"
+      onChange={(e)=>setvalue((prev) => ({...prev ,email: e.target.value}))}
+       />
+      <Input 
+      label="password" 
+      placeholder="Enter password"
+      onChange={(e)=>setvalue((prev) => ({...prev ,pass: e.target.value}))}
+      
+       />
+        <button onClick={handleSubmission}
+        disabled = {isdisabled}
+         >
+            Signup
+          </button>
+       <b >{errorMsg}</b>
+    </div>
+  )
+}
+
+        
+      
+    
+    }
+  return (
+    <div>
+      <Input 
+      label="email" 
+      placeholder="Enter email"
+      onChange={(e)=>setvalue((prev) => ({...prev ,email: e.target.value}))}
+       />
+      <Input label="password" 
+      placeholder="Enter password"
+      onChange={(e)=>setvalue((prev) => ({...prev ,pass: e.target.value}))}
+     
+       />
+      <button onClick={submit}
+      disabled={isdisabled}
+      >Submit</button>
+      <b>{errorMsg}</b>
+    </div>
+  );
+}

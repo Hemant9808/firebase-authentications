@@ -4,7 +4,7 @@ import Input from "./Input";
 import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../firebase";
 import {Link, useNavigate} from "react-router-dom";
-export default function Login() {
+export default function Login({loggedin,onloggedinchange}) {
     const [values, setvalue] = useState({ email: " ", pass: " " });
     const [errorMsg, setErrorMsg] = useState("");
     const [isdisabled,setdisabled] = useState(false);
@@ -13,25 +13,31 @@ export default function Login() {
       console.log(values.email);
     }
     const submit=()=>{
-      console.log("clicked");
+      
       signInWithEmailAndPassword(auth, values.email, values.pass)
       .then(async (res) => {
+        console.log(res);
         setdisabled(true);
-        console.log("clicked");
+        const user =res.user;
+        const {photoURL  } = res.user;
+        console.log({photoURL});
+        
         setdisabled(true);
         setvalue({email:'',pass:'',});
-        console.log(values);
+        
         navigate('/')
       })
       .catch((err) => {
        
         setErrorMsg(err.message);
       });
-    
-        
-      
-    
     }
+    const checkloggedin=()=>{
+      const newloggedin=!loggedin;
+      onloggedinchange(newloggedin);
+      
+}
+  
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -66,6 +72,7 @@ export default function Login() {
       <div>
         <button disabled={isdisabled} onClick={submit}  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
       </div>
+      
     </div>
 
     <p className="mt-10 text-center text-sm text-gray-500">
